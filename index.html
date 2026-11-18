@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Morning Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Libre+Franklin:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Layout idea: a broadsheet front page, then lettered sections; the finance section prints on salmon stock like a real markets supplement. */
+  --paper: #f2eee3;
+  --salmon: #f6e0cf;
+  --ink: #161513;
+  --ink-soft: #4b4740;
+  --rule: #26231f;
+  --hair: #b9b2a3;
+  --accent: #1f3a5c;
+  --up: #1d6b3c;
+  --down: #a3231c;
+  --mixed: #8a6a12;
+  --font-mast: "UnifrakturMaguntia", "Old English Text MT", Georgia, serif;
+  --font-display: "Playfair Display", "Times New Roman", Georgia, serif;
+  --font-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-label: "Libre Franklin", "Franklin Gothic Medium", Arial, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.55;
+}
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 20px; }
+
+/* Masthead */
+.topstrip {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 18px;
+  font-family: var(--font-label); font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
+  border-bottom: 1px solid var(--rule); padding: 14px 0 8px;
+}
+.mast { text-align: center; padding: 14px 0 6px; }
+.mast h1 {
+  font-family: var(--font-mast); font-weight: 400; margin: 0;
+  font-size: clamp(44px, 9vw, 104px); line-height: 1; letter-spacing: .01em;
+}
+.motto {
+  font-family: var(--font-display); font-style: italic; font-size: 15px; color: var(--ink-soft); margin-top: 6px;
+}
+.dateline {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 18px;
+  border-top: 3px double var(--rule); border-bottom: 3px double var(--rule);
+  padding: 7px 0; margin-top: 12px;
+  font-family: var(--font-label); font-size: 13px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+}
+
+/* Ticker */
+.ticker {
+  display: flex; gap: 0; overflow-x: auto; border-bottom: 1px solid var(--rule);
+  font-family: var(--font-label); font-size: 13px; font-variant-numeric: tabular-nums;
+  scrollbar-width: thin;
+}
+.tick { flex: 0 0 auto; padding: 8px 14px; border-right: 1px solid var(--hair); white-space: nowrap; }
+.tick:last-child { border-right: 0; }
+.tick b { font-weight: 800; margin-right: 6px; }
+.tick small { display: block; font-size: 10.5px; color: var(--ink-soft); letter-spacing: .03em; }
+
+/* Nav */
+nav.sections {
+  display: flex; flex-wrap: wrap; gap: 4px 0; justify-content: center;
+  border-bottom: 1px solid var(--rule); padding: 6px 0;
+  font-family: var(--font-label); font-size: 12.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em;
+}
+nav.sections a { color: var(--ink); text-decoration: none; padding: 4px 12px; border-right: 1px solid var(--hair); }
+nav.sections a:last-child { border-right: 0; }
+nav.sections a:hover { text-decoration: underline; }
+nav.sections .letter { color: var(--ink-soft); margin-right: 4px; }
+
+/* Front page */
+.front { display: grid; grid-template-columns: minmax(0, 2.15fr) minmax(0, 1fr); gap: 0; padding: 22px 0 8px; }
+.lead { padding-right: 24px; border-right: 1px solid var(--rule); }
+.side { padding-left: 24px; }
+.kicker {
+  font-family: var(--font-label); font-size: 11.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--accent);
+}
+.lead h2 {
+  font-family: var(--font-display); font-weight: 900; font-size: clamp(32px, 4.6vw, 54px); line-height: 1.04;
+  margin: 6px 0 10px; text-wrap: balance;
+}
+.dek { font-family: var(--font-display); font-style: italic; font-size: 21px; line-height: 1.35; color: var(--ink-soft); margin: 0 0 16px; text-wrap: balance; }
+.lead-body { column-count: 2; column-gap: 26px; column-rule: 1px solid var(--hair); }
+.lead-body p { margin: 0 0 12px; text-align: justify; hyphens: auto; }
+.lead-body p:first-child::first-letter {
+  font-family: var(--font-display); font-weight: 900; float: left; font-size: 64px; line-height: .82; padding: 6px 8px 0 0;
+}
+.impact-box {
+  border: 2px solid var(--rule); background: var(--salmon); padding: 14px 16px 12px; margin: 14px 0 6px;
+}
+.impact-box h3 { font-family: var(--font-label); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .12em; margin: 0 0 8px; }
+.impact-box ul { margin: 0 0 10px; padding-left: 18px; }
+.impact-box li { margin-bottom: 6px; }
+.sources { font-family: var(--font-label); font-size: 11.5px; color: var(--ink-soft); margin-top: 8px; line-height: 1.6; }
+.sources span { font-weight: 800; text-transform: uppercase; letter-spacing: .08em; margin-right: 4px; }
+.sources a { color: var(--ink-soft); }
+
+.side h3.boxhead {
+  font-family: var(--font-label); font-size: 12.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .12em;
+  border-top: 3px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 6px 0; margin: 0 0 10px;
+}
+ol.glance { margin: 0; padding: 0; list-style: none; counter-reset: g; }
+ol.glance li { counter-increment: g; display: grid; grid-template-columns: 30px 1fr; gap: 4px; padding: 8px 0; border-bottom: 1px solid var(--hair); font-size: 15.5px; line-height: 1.42; }
+ol.glance li::before { content: counter(g); font-family: var(--font-display); font-weight: 900; font-size: 22px; line-height: 1; }
+ol.glance a { color: var(--ink); text-decoration: none; }
+ol.glance a:hover { text-decoration: underline; }
+.edition-note { font-size: 13.5px; font-style: italic; color: var(--ink-soft); margin-top: 14px; }
+
+/* Ledger's read */
+.read {
+  border-top: 3px double var(--rule); border-bottom: 3px double var(--rule);
+  margin: 18px 0 8px; padding: 16px 0;
+  display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 24px;
+}
+.read h2 { font-family: var(--font-display); font-weight: 900; font-size: 30px; line-height: 1.05; margin: 0; }
+.read h2 em { display: block; font-weight: 400; font-size: 15px; margin-top: 8px; color: var(--ink-soft); }
+.read-body { column-count: 3; column-gap: 24px; column-rule: 1px solid var(--hair); }
+.read-body p { margin: 0 0 10px; text-align: justify; hyphens: auto; }
+.disclaimer { font-family: var(--font-label); font-size: 11.5px; color: var(--ink-soft); }
+
+/* Sections */
+section.paper { padding: 26px 0 10px; }
+section.paper.finance { background: var(--salmon); }
+.sec-head {
+  display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+  border-top: 4px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 6px 0; margin-bottom: 14px;
+}
+.sec-letter { font-family: var(--font-label); font-weight: 800; font-size: 13px; border: 1.5px solid var(--rule); padding: 1px 7px; }
+.sec-head h2 { font-family: var(--font-display); font-weight: 900; font-size: clamp(26px, 3.4vw, 38px); margin: 0; line-height: 1.1; }
+.sec-head p { margin: 0; font-style: italic; color: var(--ink-soft); font-size: 15px; }
+
+.group { margin-bottom: 18px; }
+.group h3 {
+  font-family: var(--font-label); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .14em;
+  margin: 0 0 8px; padding-bottom: 4px; border-bottom: 1px solid var(--hair);
+}
+.stories { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 0; }
+.story { padding: 6px 18px 14px; border-left: 1px solid var(--hair); }
+.stories .story:first-child { border-left: 0; padding-left: 0; }
+.story.featured { grid-column: span 2; }
+.story.featured .story-body { column-count: 2; column-gap: 20px; }
+.story h4 { font-family: var(--font-display); font-weight: 700; font-size: 23px; line-height: 1.15; margin: 4px 0 8px; text-wrap: balance; }
+.story.featured h4 { font-size: 30px; }
+.story p { margin: 0 0 10px; font-size: 16px; text-align: justify; hyphens: auto; }
+.mlink {
+  border-top: 1px solid var(--rule); padding-top: 8px; margin-top: 6px; font-size: 15px;
+  break-inside: avoid;
+}
+.mlink b { font-family: var(--font-label); font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; display: block; margin-bottom: 3px; }
+.mlink i { display: block; margin-bottom: 7px; }
+.chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.chip {
+  font-family: var(--font-label); font-size: 11.5px; font-weight: 600; padding: 2px 7px; border: 1px solid currentColor; white-space: nowrap;
+}
+.chip.up { color: var(--up); }
+.chip.down { color: var(--down); }
+.chip.mixed, .chip.flat { color: var(--mixed); }
+
+/* Tables */
+.tables { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0 24px; margin-bottom: 22px; }
+.mtable { width: 100%; border-collapse: collapse; font-family: var(--font-label); font-size: 13px; font-variant-numeric: tabular-nums; margin-bottom: 12px; }
+.mtable caption { text-align: left; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; font-size: 11.5px; border-bottom: 2px solid var(--rule); padding-bottom: 4px; }
+.mtable td { padding: 5px 4px; border-bottom: 1px solid var(--hair); vertical-align: top; }
+.mtable td.num { text-align: right; white-space: nowrap; }
+.mtable td.asof { color: var(--ink-soft); font-size: 11px; text-align: right; white-space: nowrap; }
+.up-t { color: var(--up); } .down-t { color: var(--down); } .flat-t, .mixed-t { color: var(--mixed); }
+
+.matrix-wrap, .cal-wrap { overflow-x: auto; }
+.matrix, .cal { width: 100%; border-collapse: collapse; font-size: 15px; }
+.matrix th, .cal th {
+  font-family: var(--font-label); font-size: 11.5px; text-transform: uppercase; letter-spacing: .1em; text-align: left;
+  border-bottom: 2px solid var(--rule); padding: 6px 8px;
+}
+.matrix td, .cal td { border-bottom: 1px solid var(--hair); padding: 8px; vertical-align: top; }
+.matrix td:first-child { font-weight: 600; }
+.cal td:first-child { font-family: var(--font-label); font-weight: 800; font-size: 13px; white-space: nowrap; }
+h3.tablehead { font-family: var(--font-display); font-size: 24px; margin: 18px 0 8px; }
+
+.archive {
+  display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding: 6px 0 0;
+  font-family: var(--font-label); font-size: 12px; text-transform: uppercase; letter-spacing: .06em;
+}
+.archive[hidden] { display: none; }
+.archive select {
+  font-family: var(--font-label); font-size: 13px; background: var(--paper); color: var(--ink);
+  border: 1px solid var(--rule); padding: 3px 6px;
+}
+footer { border-top: 3px double var(--rule); margin-top: 26px; padding: 14px 0 40px; font-family: var(--font-label); font-size: 12px; color: var(--ink-soft); }
+.status { padding: 60px 0; text-align: center; font-style: italic; color: var(--ink-soft); }
+
+@media (max-width: 900px) {
+  .front { grid-template-columns: 1fr; }
+  .lead { padding-right: 0; border-right: 0; }
+  .side { padding-left: 0; margin-top: 18px; }
+  .read { grid-template-columns: 1fr; gap: 10px; }
+  .read-body { column-count: 2; }
+}
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  .lead-body, .read-body, .story.featured .story-body { column-count: 1; }
+  .story.featured { grid-column: auto; }
+  .story { border-left: 0; padding-left: 0; padding-right: 0; border-bottom: 1px solid var(--hair); }
+  .topstrip, .dateline { justify-content: center; text-align: center; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topstrip" id="topstrip"><span>Loading today's edition</span></div>
+  <header class="mast">
+    <h1>The Morning Ledger</h1>
+    <div class="motto">The world's news, read through the lens of money</div>
+  </header>
+  <div class="dateline" id="dateline"></div>
+  <div class="archive" id="archive" hidden>
+    <label for="archive-select">Past editions</label>
+    <select id="archive-select"></select>
+  </div>
+</div>
+<div class="wrap"><div class="ticker" id="ticker" aria-label="Market ticker"></div></div>
+<div class="wrap"><nav class="sections" id="nav" aria-label="Sections"></nav></div>
+<main id="main"><div class="wrap status">Setting the type for today's edition…</div></main>
+
+<script>
+(function () {
+  "use strict";
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function dirClass(d) { return ["up", "down", "flat", "mixed"].indexOf(d) >= 0 ? d : "flat"; }
+  function arrow(d) { return d === "up" ? "▲" : d === "down" ? "▼" : "◆"; }
+  function chips(list) {
+    if (!list || !list.length) return "";
+    return '<div class="chips">' + list.map(function (c) {
+      var d = dirClass(c.dir);
+      return '<span class="chip ' + d + '">' + arrow(d) + " " + esc(c.label) + "</span>";
+    }).join("") + "</div>";
+  }
+  function sources(list) {
+    if (!list || !list.length) return "";
+    return '<div class="sources"><span>Sources</span>' + list.map(function (s) {
+      return '<a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.name) + "</a>";
+    }).join(" · ") + "</div>";
+  }
+  function storyHTML(st) {
+    var feat = st.featured ? " featured" : "";
+    return '<article class="story' + feat + '">' +
+      (st.kicker ? '<div class="kicker">' + esc(st.kicker) + "</div>" : "") +
+      "<h4>" + esc(st.headline) + "</h4>" +
+      '<div class="story-body"><p>' + esc(st.summary) + "</p>" +
+      '<div class="mlink"><b>Market link</b><i>' + esc(st.market) + "</i>" + chips(st.chips) + "</div>" +
+      sources(st.sources) + "</div></article>";
+  }
+  function marketTables(groups) {
+    return '<div class="tables">' + groups.map(function (g) {
+      return '<table class="mtable"><caption>' + esc(g.region) + "</caption><tbody>" + g.rows.map(function (r) {
+        var d = dirClass(r.dir);
+        return "<tr><td>" + esc(r.name) + '</td><td class="num">' + esc(r.value) +
+          '</td><td class="num ' + d + '-t">' + esc(r.change) + '</td><td class="asof">' + esc(r.asof) + "</td></tr>";
+      }).join("") + "</tbody></table>";
+    }).join("") + "</div>";
+  }
+  function matrix(rows) {
+    return '<h3 class="tablehead">Impact matrix: today\'s news, by asset</h3><div class="matrix-wrap"><table class="matrix"><thead><tr><th>Story</th><th>Assets affected</th><th>Note</th></tr></thead><tbody>' +
+      rows.map(function (r) {
+        return "<tr><td>" + esc(r.event) + "</td><td>" + chips(r.assets) + "</td><td>" + esc(r.note) + "</td></tr>";
+      }).join("") + "</tbody></table></div>";
+  }
+
+  function render(ed) {
+    var e = ed.edition || {};
+    document.getElementById("topstrip").innerHTML =
+      "<span>Vol. " + esc(e.volume) + " · No. " + esc(e.number) + "</span>" +
+      "<span>Frankfurt · New York · Mumbai · Tokyo</span>" +
+      "<span>Compiled " + esc(e.compiled) + "</span>";
+    document.getElementById("dateline").innerHTML =
+      "<span>" + esc(e.dateline) + "</span><span>Morning Edition</span><span>Markets · World · Money</span>";
+    document.title = "The Morning Ledger";
+
+    document.getElementById("ticker").innerHTML = (ed.ticker || []).map(function (t) {
+      var d = dirClass(t.dir);
+      return '<div class="tick"><b>' + esc(t.name) + "</b>" + esc(t.value) +
+        ' <span class="' + d + '-t">' + arrow(d) + " " + esc(t.change) + "</span><small>" + esc(t.asof) + "</small></div>";
+    }).join("");
+
+    var secs = ed.sections || [];
+    var navItems = ['<a href="#front"><span class="letter">A</span>Front Page</a>'].concat(secs.map(function (s) {
+      return '<a href="#' + esc(s.id) + '"><span class="letter">' + esc(s.letter) + "</span>" + esc(s.name) + "</a>";
+    }));
+    navItems.push('<a href="#ahead"><span class="letter">' + String.fromCharCode(66 + secs.length) + "</span>The Day Ahead</a>");
+    document.getElementById("nav").innerHTML = navItems.join("");
+
+    var L = ed.lead || {};
+    var secName = {};
+    secs.forEach(function (s) { secName[s.id] = s.name; });
+    var html = "";
+    html += '<div class="wrap" id="front"><div class="front"><article class="lead">' +
+      '<div class="kicker">' + esc(L.kicker) + "</div><h2>" + esc(L.headline) + '</h2><p class="dek">' + esc(L.dek) + "</p>" +
+      '<div class="lead-body">' + (L.body || []).map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("") + "</div>" +
+      (L.impact ? '<div class="impact-box"><h3>' + esc(L.impact.title) + "</h3><ul>" +
+        (L.impact.points || []).map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul>" + chips(L.impact.chips) + "</div>" : "") +
+      sources(L.sources) + "</article>" +
+      '<aside class="side"><h3 class="boxhead">At a glance</h3><ol class="glance">' +
+      (ed.highlights || []).map(function (h) {
+        var link = h.section ? ' <a href="#' + esc(h.section) + '" aria-label="Go to ' + esc(secName[h.section] || h.section) + '">→</a>' : "";
+        return "<li><span>" + esc(h.text) + link + "</span></li>";
+      }).join("") + "</ol>" +
+      (e.note ? '<p class="edition-note">' + esc(e.note) + "</p>" : "") + "</aside></div>";
+
+    if (ed.read) {
+      html += '<div class="read"><h2>' + esc(ed.read.title) + "<em>How today's news connects to prices</em></h2><div>" +
+        '<div class="read-body">' + (ed.read.paragraphs || []).map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("") + "</div>" +
+        (ed.read.disclaimer ? '<div class="disclaimer">' + esc(ed.read.disclaimer) + "</div>" : "") + "</div></div>";
+    }
+    html += "</div>";
+
+    secs.forEach(function (s) {
+      html += '<section class="paper' + (s.finance ? " finance" : "") + '" id="' + esc(s.id) + '"><div class="wrap">' +
+        '<div class="sec-head"><span class="sec-letter">' + esc(s.letter) + "</span><h2>" + esc(s.name) + "</h2>" +
+        (s.intro ? "<p>" + esc(s.intro) + "</p>" : "") + "</div>";
+      if (s.finance && ed.markets_table) html += marketTables(ed.markets_table);
+      (s.groups || []).forEach(function (g) {
+        html += '<div class="group"><h3>' + esc(g.name) + '</h3><div class="stories">' + (g.stories || []).map(storyHTML).join("") + "</div></div>";
+      });
+      if (s.finance && ed.impact_matrix) html += matrix(ed.impact_matrix);
+      html += "</div></section>";
+    });
+
+    html += '<section class="paper" id="ahead"><div class="wrap"><div class="sec-head"><span class="sec-letter">' +
+      String.fromCharCode(66 + secs.length) + '</span><h2>The Day Ahead</h2><p>Times in Central European Time where given.</p></div>' +
+      '<div class="cal-wrap"><table class="cal"><thead><tr><th>When</th><th>Event</th><th>Why it matters</th></tr></thead><tbody>' +
+      (ed.calendar || []).map(function (c) {
+        return "<tr><td>" + esc(c.when) + "</td><td>" + esc(c.event) + "</td><td>" + esc(c.why) + "</td></tr>";
+      }).join("") + "</tbody></table></div>" +
+      "<footer>The Morning Ledger is compiled each morning by an AI news agent from public reporting; every story links its sources. Figures carry the time they were taken and may have moved since. Information only, not investment advice.</footer>" +
+      "</div></section>";
+
+    document.getElementById("main").innerHTML = html;
+    if (location.hash) {
+      var el = document.getElementById(location.hash.slice(1));
+      if (el) el.scrollIntoView();
+    }
+  }
+
+  function load(url) {
+    return fetch(url, { cache: "no-store" })
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(render)
+      .catch(function (err) {
+        document.getElementById("main").innerHTML =
+          '<div class="wrap status">This edition could not be loaded (' + esc(err.message) + '). Reload the page; if it persists, the morning run may still be in progress.</div>';
+      });
+  }
+  load("edition.json");
+
+  // Past editions: shown only where an editions/index.json archive exists (the website build).
+  fetch("editions/index.json", { cache: "no-store" })
+    .then(function (r) { if (!r.ok) throw new Error("none"); return r.json(); })
+    .then(function (list) {
+      if (!Array.isArray(list) || list.length < 1) return;
+      var sel = document.getElementById("archive-select");
+      sel.innerHTML = list.map(function (it, i) {
+        return '<option value="' + esc(it.date) + '">' + (i === 0 ? "Today · " : "") + esc(it.dateline) + " · No. " + esc(it.number) + "</option>";
+      }).join("");
+      sel.addEventListener("change", function () {
+        var v = sel.value;
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) return;
+        load(sel.selectedIndex === 0 ? "edition.json" : "editions/" + v + ".json").then(function () { window.scrollTo(0, 0); });
+      });
+      document.getElementById("archive").hidden = false;
+    })
+    .catch(function () {});
+})();
+</script>
+</body>
+</html>
