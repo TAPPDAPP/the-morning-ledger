@@ -1,20 +1,26 @@
 [
-  {
-    "date": "2026-11-20",
-    "dateline": "Friday, 20 November 2026",
-    "number": 3,
-    "headline": "Anthropic's Debut Can't Stop a Global AI Sell-Off: Dow Sheds 1,101 Points and Asia Plunges"
-  },
-  {
-    "date": "2026-11-19",
-    "dateline": "Thursday, 19 November 2026",
-    "number": 2,
-    "headline": "Anthropic Prices a Record $81 Billion IPO and Debuts Today"
-  },
-  {
-    "date": "2026-11-18",
-    "dateline": "Wednesday, 18 November 2026",
-    "number": 1,
-    "headline": "Nvidia Clears the Bar and Steadies a Shaken Market"
-  }
+ {
+  "date": "2026-11-21",
+  "dateline": "Saturday, 21 November 2026",
+  "number": 4,
+  "headline": "Nvidia's 14% Plunge Pushes Wall Street Into Correction as the AI Rout Goes Global"
+ },
+ {
+  "date": "2026-11-20",
+  "dateline": "Friday, 20 November 2026",
+  "number": 3,
+  "headline": "Anthropic's Debut Can't Stop a Global AI Sell-Off: Dow Sheds 1,101 Points and Asia Plunges"
+ },
+ {
+  "date": "2026-11-19",
+  "dateline": "Thursday, 19 November 2026",
+  "number": 2,
+  "headline": "Anthropic Prices a Record $81 Billion IPO and Debuts Today"
+ },
+ {
+  "date": "2026-11-18",
+  "dateline": "Wednesday, 18 November 2026",
+  "number": 1,
+  "headline": "Nvidia Clears the Bar and Steadies a Shaken Market"
+ }
 ]
